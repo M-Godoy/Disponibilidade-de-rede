@@ -8,11 +8,13 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Disponibilidade_de_rede
 {
     public partial class Form1 : Form
     {
+        
 
         public Form1()
         {
@@ -21,6 +23,12 @@ namespace Disponibilidade_de_rede
 
         private void button1_Click(object sender, EventArgs e)
         {
+            label3.Text = "A Máquina Está ligada";
+            label3.BackColor = Color.Green;
+            
+            monitoramento.Start();
+            monitoramento.Interval = 500;
+
 
         }
 
@@ -29,39 +37,35 @@ namespace Disponibilidade_de_rede
 
         }
 
-            static void OnNetworkAddressChanged(object sender, EventArgs args)
-            {
-                foreach ((string name, OperationalStatus status) in
-                    NetworkInterface.GetAllNetworkInterfaces()
-                        .Select(networkInterface =>
-                            (networkInterface.Name, networkInterface.OperationalStatus)))
-                {
-                    Console.WriteLine(
-                        $"{name} is {status}");
-                }
-            }
-
-        private void monitoramento_Tick(object sender, EventArgs e)
+        private async void monitoramento_Tick(object sender, EventArgs e)
         {
+            monitoramento.Interval = 500;
 
-        }
-        
-        private async void textBox1_TextChanged(object sender, EventArgs e)
-        {
-             Ping ping = new Ping();
+            Ping ping = new Ping();
 
             string hostName = "stackoverflow.com";
-            PingReply reply = await ping.SendPingAsync(hostName);
-            Console.WriteLine($"Ping status for ({hostName}): {reply.Status}");
-            if ( reply.Status ==  IPStatus.Success )
+            try
             {
-                textBox1.BackColor = Color.Green;    
+                PingReply reply = await ping.SendPingAsync(hostName);
+                Console.WriteLine($"Ping status for ({hostName}): {reply.Status}");
+                if (reply.Status == IPStatus.Success)
+                {
+                    label4.Text = "A Rede Está Funcionando Normalmente";
+                    label4.BackColor = Color.Green;
+                }
+                else
+                {
+                    label4.Text = "A Rede Apresenta Problemas";
+                    label4.BackColor = Color.Red;
+                }
             }
-            else
+            catch (PingException)
             {
-                textBox1.BackColor = Color.Red;
+                label4.Text = "Não foi possível alcançar o host";
+                label4.BackColor = Color.Orange;
             }
         }
+
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
@@ -70,8 +74,30 @@ namespace Disponibilidade_de_rede
 
         private void btndesligar_Click(object sender, EventArgs e)
         {
-            textBox2.BackColor = Color.Transparent;
-            textBox2.BackColor = Color.Red;
+            label3.Text = "A Máquina Está Desligada";
+            label3.BackColor = Color.Red;
+            label4.Text = "-------";
+            label4.BackColor = Color.Transparent;
+
+
+            monitoramento.Stop();
+        }
+
+      
+
+            private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+           
         }
     }
 }
