@@ -23,13 +23,7 @@ namespace Disponibilidade_de_rede
 
         private void button1_Click(object sender, EventArgs e)
         {
-            label3.Text = "A Máquina Está ligada";
-            label3.BackColor = Color.Green;
-            
-            monitoramento.Start();
-            monitoramento.Interval = 500;
-
-
+           
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -39,7 +33,7 @@ namespace Disponibilidade_de_rede
 
         private async void monitoramento_Tick(object sender, EventArgs e)
         {
-            monitoramento.Interval = 500;
+            monitoramento.Interval = 10000;
 
             Ping ping = new Ping();
 
@@ -63,6 +57,16 @@ namespace Disponibilidade_de_rede
             {
                 label4.Text = "Não foi possível alcançar o host";
                 label4.BackColor = Color.Orange;
+            }
+            catch (Exception)
+            {
+                // Manipulação de exceções gerais
+                label4.Text = "Erro ao verificar a rede";
+                label4.BackColor = Color.Yellow;
+            }
+            finally
+            {
+                ping.Dispose(); // Liberando recursos do objeto Ping
             }
         }
 
@@ -98,6 +102,15 @@ namespace Disponibilidade_de_rede
         private void label3_Click(object sender, EventArgs e)
         {
            
+        }
+
+        private void btnligar_Click(object sender, EventArgs e)
+        {
+            label3.Text = "A Máquina Está ligada";
+            label3.BackColor = Color.Green;
+
+            monitoramento.Start();
+
         }
     }
 }

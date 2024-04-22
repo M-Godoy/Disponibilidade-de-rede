@@ -50,7 +50,7 @@
             this.btnligar.TabIndex = 0;
             this.btnligar.Text = "Ligar Máquina";
             this.btnligar.UseVisualStyleBackColor = true;
-            this.btnligar.Click += new System.EventHandler(this.button1_Click);
+            this.btnligar.Click += new System.EventHandler(this.btnligar_Click);
             // 
             // monitoramento
             // 
