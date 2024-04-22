@@ -35,14 +35,28 @@ namespace Disponibilidade_de_rede
         {
             monitoramento.Interval = 10000;
 
+            List<string> Hosts = new List<string> { "stackoverflow.com", "github.com", "microsoft.com"};
+
             Ping ping = new Ping();
 
-            string hostName = "stackoverflow.com";
+            bool networkAvailable = false;
+
             try
             {
-                PingReply reply = await ping.SendPingAsync(hostName);
-                Console.WriteLine($"Ping status for ({hostName}): {reply.Status}");
-                if (reply.Status == IPStatus.Success)
+                // Itera sobre os hosts confiáveis
+                foreach (string hostName in Hosts)
+                {
+                    PingReply reply = await ping.SendPingAsync(hostName);
+                    Console.WriteLine($"Ping status for ({hostName}): {reply.Status}");
+
+                    // Verifica se a resposta foi bem-sucedida
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        networkAvailable = true; // Rede está disponível
+                        break; // Sai do loop se encontrar um host acessível
+                    }
+                }
+                if (networkAvailable)
                 {
                     label4.Text = "A Rede Está Funcionando Normalmente";
                     label4.BackColor = Color.Green;
